@@ -31,16 +31,25 @@ custom_char = (
 )
 
 # DFPlayer
-player = DFPlayer(8, 9, 10)
-sound_set = {"start" : 1}
+VOLUME = 20
+player = DFPlayer(8, 9, VOLUME)
+sound_set = {
+    "start" : 1,
+    "start_countdown" : 2,
+    "count" : 3,
+    "game_finish" : 4,
+    "result_show" : 5,
+}
 
 target_pin_list = [
-    [2, 3, 5],
-    [4, 5, 5],
+    [2, 3, 8],
+    [4, 5, 8],
+    [22, 21, 8],
+    [19,18, 8],
 ]
 
 # Game Status
-ENEMY_COUNT = 2
+ENEMY_COUNT = len(target_pin_list)
 GAME_TIME = 10 
 is_start = False
 is_game_running = False
@@ -91,10 +100,10 @@ def start_game(start_receiver, i2c):
             print("start!")
             player.play(sound_set["start"])
 
-            
-            #lcd.putstr("  Game Start!!\n  Shoot Here")
             lcd.putstr("  Game Start!!")
             time.sleep(2)
+            # play count down
+            player.play(sound_set["start_countdown"])
             for i in range(3, 1, -1):
                 lcd.clear()
                 lcd.putstr("       " + str(i)) 
@@ -120,7 +129,7 @@ def display_gauge(i2c, gauge_count):
         gauge_bar = chr(0) * i 
         lcd.putstr(gauge_bar + "\nSCORE " + str(score) ) 
         # play sound
-        #player.play(sound_set["start"])
+        player.play(sound_set["count"])
         time.sleep(1)
 
     is_game_running = False
@@ -130,8 +139,8 @@ def display_finish(i2c):
 
     lcd = get_lcd(i2c)
     # play finish sound
-    #player.play(sound_set["start"])
-    for i in range(3, 0, -1):
+    player.play(sound_set["game_finish"])
+    for i in range(2, 0, -1):
         lcd.clear()
         time.sleep(1)
         lcd.putstr("  Game Finish!!")
@@ -141,13 +150,13 @@ def display_finish(i2c):
 def display_result(i2c):
 
     lcd = get_lcd(i2c)
+    # play sound
+    player.play(sound_set["result_show"])
     # LEVEL JUDGE
     for i in range(3, 0, -1):
         lcd.clear()
         time.sleep(1)
         lcd.putstr("   SCORE " + str(score))
-        # play sound
-        #player.play(sound_set["start"])
         time.sleep(1)
     lcd.clear()
 
