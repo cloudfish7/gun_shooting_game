@@ -6,6 +6,9 @@ import utime
 # 第1引数でTXピン番号、第2引数でRXピン番号を指定する。
 # 第3引数（オプション）でボリューム値を指定をする場合は、0〜30までの数値で指定する。デフォルト値は15。
 
+def add_numbers(a, b):
+    return a + b
+
 THIS_VERSION = 1.0
 
 class DFPlayer:
